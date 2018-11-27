@@ -1,0 +1,46 @@
+items = 128..183
+Enum.map(items,
+
+  fn(x)->
+  {result, _} = Code.eval_string("#{x} - 128")
+  :io.fwrite("~s~n",[
+  "
+    defp do_decode_item(<<#{x}, tail::binary>>, nil) do
+
+    <<item::binary-size(#{result}), new_tail::binary>> = tail
+    do_decode_item(new_tail, item)
+  end
+
+  defp do_decode_item(<<#{x}, tail::binary>>, result) do
+
+    <<item::binary-size(#{result}), new_tail::binary>> = tail
+    do_decode_item(new_tail, [item | result])
+  end
+  "])
+  end
+)
+
+
+items = 193..247
+Enum.map(items,
+
+  fn(x)->
+  {result, _} = Code.eval_string("#{x} - 192")
+  :io.fwrite("~s~n",[
+  "
+defp do_decode_item(<<#{x}, tail::binary>>, nil) do
+
+    <<item::binary-size(#{result}), new_tail::binary>> = tail
+    new_item = Enum.reverse(decode_item(item, []))
+    do_decode_item(new_tail, new_item)
+  end
+
+  defp do_decode_item(<<#{x}, tail::binary>>, result) do
+
+    <<item::binary-size(#{result}), new_tail::binary>> = tail
+    new_item = decode_item(item, [])
+    do_decode_item(new_tail, [new_item | result])
+  end
+  "])
+  end
+)
