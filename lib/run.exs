@@ -9,4 +9,4 @@ Benchee.run(%{
   "master" => fn -> large_rlp
            |> ExRLP.encode()
            |> ExRLPMaster.decode() end
-})
+}, time: 20, memory_time: 5)
